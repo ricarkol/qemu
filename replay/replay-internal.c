@@ -35,8 +35,64 @@ void replay_put_byte(uint8_t byte)
     }
 }
 
+/* replay clock kinds */
+enum __ReplayClockKind {
+    /* host_clock */
+    __REPLAY_CLOCK_HOST = EVENT_CLOCK,
+    /* virtual_rt_clock */
+    __REPLAY_CLOCK_VIRTUAL_RT,
+    __REPLAY_CLOCK_COUNT
+};
+
+/* IDs of the checkpoints */
+enum __ReplayCheckpoint {
+    __CHECKPOINT_CLOCK_WARP = EVENT_CHECKPOINT,
+    __CHECKPOINT_RESET_REQUESTED,
+    __CHECKPOINT_SUSPEND_REQUESTED,
+    __CHECKPOINT_CLOCK_VIRTUAL,
+    __CHECKPOINT_CLOCK_HOST,
+    __CHECKPOINT_CLOCK_VIRTUAL_RT,
+    __CHECKPOINT_INIT,
+    __CHECKPOINT_RESET,
+    __CHECKPOINT_COUNT
+};
+
 void replay_put_event(uint8_t event)
 {
+    switch (event) {
+    case EVENT_INSTRUCTION:
+	printf("EVENT_INSTRUCTION\n"); break;
+    case EVENT_INTERRUPT:
+        printf("EVENT_INTERRUPT\n"); break;
+    case EVENT_EXCEPTION:
+        printf("EVENT_EXCEPTION\n"); break;
+    case EVENT_ASYNC:
+        printf("EVENT_ASYNC\n"); break;
+    case EVENT_SHUTDOWN:
+        printf("EVENT_SHUTDOWN\n"); break;
+    case __REPLAY_CLOCK_HOST:
+        printf("EVENT_REPLAY_CLOCK_HOST\n"); break;
+    case __REPLAY_CLOCK_VIRTUAL_RT:
+        printf("EVENT_REPLAY_CLOCK_VIRTUAL_RT\n"); break;
+    case __CHECKPOINT_CLOCK_WARP:
+        printf("EVENT_CHECKPOINT_CLOCK_WARP\n"); break;
+    case __CHECKPOINT_RESET_REQUESTED:
+        printf("EVENT_CHECKPOINT_RESET_REQUESTED\n"); break;
+    case __CHECKPOINT_SUSPEND_REQUESTED:
+        printf("EVENT_CHECKPOINT_SUSPEND_REQUESTED\n"); break;
+    case __CHECKPOINT_CLOCK_VIRTUAL:
+        printf("EVENT_CHECKPOINT_CLOCK_VIRTUAL\n"); break;
+    case __CHECKPOINT_CLOCK_HOST:
+        printf("EVENT_CHECKPOINT_CLOCK_HOST\n"); break;
+    case __CHECKPOINT_CLOCK_VIRTUAL_RT:
+        printf("EVENT_CHECKPOINT_CLOCK_VIRTUAL_RT\n"); break;
+    case __CHECKPOINT_INIT:
+        printf("EVENT_CHECKPOINT_INIT\n"); break;
+    case __CHECKPOINT_RESET:
+        printf("EVENT_CHECKPOINT_RESET\n"); break;
+    case EVENT_END:
+        printf("EVENT_END\n"); break;
+    }
     assert(event < EVENT_COUNT);
     replay_put_byte(event);
 }
