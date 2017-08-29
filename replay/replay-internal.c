@@ -59,37 +59,37 @@ void replay_put_event(uint8_t event)
 {
     switch (event) {
     case EVENT_INSTRUCTION:
-	printf("EVENT_INSTRUCTION\n"); break;
+	fprintf(stderr,"EVENT_INSTRUCTION\n"); break;
     case EVENT_INTERRUPT:
-        printf("EVENT_INTERRUPT\n"); break;
+        fprintf(stderr,"EVENT_INTERRUPT\n"); break;
     case EVENT_EXCEPTION:
-        printf("EVENT_EXCEPTION\n"); break;
+        fprintf(stderr,"EVENT_EXCEPTION\n"); break;
     case EVENT_ASYNC:
-        printf("EVENT_ASYNC\n"); break;
+        fprintf(stderr,"EVENT_ASYNC\n"); break;
     case EVENT_SHUTDOWN:
-        printf("EVENT_SHUTDOWN\n"); break;
+        fprintf(stderr,"EVENT_SHUTDOWN\n"); break;
     case __REPLAY_CLOCK_HOST:
-        printf("EVENT_REPLAY_CLOCK_HOST\n"); break;
+        fprintf(stderr,"EVENT_REPLAY_CLOCK_HOST\n"); break;
     case __REPLAY_CLOCK_VIRTUAL_RT:
-        printf("EVENT_REPLAY_CLOCK_VIRTUAL_RT\n"); break;
+        fprintf(stderr,"EVENT_REPLAY_CLOCK_VIRTUAL_RT\n"); break;
     case __CHECKPOINT_CLOCK_WARP:
-        printf("EVENT_CHECKPOINT_CLOCK_WARP\n"); break;
+        fprintf(stderr,"EVENT_CHECKPOINT_CLOCK_WARP\n"); break;
     case __CHECKPOINT_RESET_REQUESTED:
-        printf("EVENT_CHECKPOINT_RESET_REQUESTED\n"); break;
+        fprintf(stderr,"EVENT_CHECKPOINT_RESET_REQUESTED\n"); break;
     case __CHECKPOINT_SUSPEND_REQUESTED:
-        printf("EVENT_CHECKPOINT_SUSPEND_REQUESTED\n"); break;
+        fprintf(stderr,"EVENT_CHECKPOINT_SUSPEND_REQUESTED\n"); break;
     case __CHECKPOINT_CLOCK_VIRTUAL:
-        printf("EVENT_CHECKPOINT_CLOCK_VIRTUAL\n"); break;
+        fprintf(stderr,"EVENT_CHECKPOINT_CLOCK_VIRTUAL\n"); break;
     case __CHECKPOINT_CLOCK_HOST:
-        printf("EVENT_CHECKPOINT_CLOCK_HOST\n"); break;
+        fprintf(stderr,"EVENT_CHECKPOINT_CLOCK_HOST\n"); break;
     case __CHECKPOINT_CLOCK_VIRTUAL_RT:
-        printf("EVENT_CHECKPOINT_CLOCK_VIRTUAL_RT\n"); break;
+        fprintf(stderr,"EVENT_CHECKPOINT_CLOCK_VIRTUAL_RT\n"); break;
     case __CHECKPOINT_INIT:
-        printf("EVENT_CHECKPOINT_INIT\n"); break;
+        fprintf(stderr,"EVENT_CHECKPOINT_INIT\n"); break;
     case __CHECKPOINT_RESET:
-        printf("EVENT_CHECKPOINT_RESET\n"); break;
+        fprintf(stderr,"EVENT_CHECKPOINT_RESET\n"); break;
     case EVENT_END:
-        printf("EVENT_END\n"); break;
+        fprintf(stderr,"EVENT_END\n"); break;
     }
     assert(event < EVENT_COUNT);
     replay_put_byte(event);
