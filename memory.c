@@ -1602,6 +1602,49 @@ void memory_region_init_ram_from_file(MemoryRegion *mr,
     }
 }
 
+extern int nablafs_init(char *root_dir, char **mmap_addr, long *mmap_len);
+
+void memory_region_init_ram_from_nablafs(MemoryRegion *mr,
+                                      struct Object *owner,
+                                      const char *name,
+                                      uint64_t size,
+                                      uint64_t align,
+                                      uint32_t ram_flags,
+                                      const char *path,
+                                      Error **errp)
+{
+    Error *err = NULL;
+    char *mmap_addr;
+    long mmap_len;
+
+    memory_region_init(mr, owner, name, size);
+    mr->ram = true;
+    mr->terminates = true;
+    mr->destructor = memory_region_destructor_ram;
+    mr->align = align;
+
+#define NABLAFS
+#ifdef NABLAFS
+    nablafs_init((char *)path, &mmap_addr, &mmap_len);
+#else
+    int fd = open("/home/kollerr/research/qemu-scripts/test.xfs",
+		O_RDONLY);
+    mmap_addr = mmap(NULL, 512 * 1024 * 1024,
+			//PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+			PROT_READ|PROT_WRITE, MAP_PRIVATE, fd, 0);
+    assert(mmap_addr != MAP_FAILED);
+    mmap_len = 512 * 1024 * 1024;
+#endif
+
+    mr->ram_block = qemu_ram_alloc_from_mmap_addr(size, mr, ram_flags, mmap_addr, mmap_len, &err);
+    mr->dirty_log_mask = tcg_enabled() ? (1 << DIRTY_MEMORY_CODE) : 0;
+    if (err) {
+        mr->size = int128_zero();
+        object_unparent(OBJECT(mr));
+        error_propagate(errp, err);
+    }
+}
+
 void memory_region_init_ram_from_fd(MemoryRegion *mr,
                                     struct Object *owner,
                                     const char *name,

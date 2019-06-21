@@ -2373,6 +2373,68 @@ RAMBlock *qemu_ram_alloc_from_fd(ram_addr_t size, MemoryRegion *mr,
 }
 
 
+RAMBlock *qemu_ram_alloc_from_mmap_addr(ram_addr_t size, MemoryRegion *mr,
+		uint32_t ram_flags,
+		char *mmap_addr, ram_addr_t mmap_len,
+		Error **errp)
+{
+    RAMBlock *new_block;
+    Error *local_err = NULL;
+
+    /* Just support these ram flags by now. */
+    assert((ram_flags & ~(RAM_SHARED | RAM_PMEM)) == 0);
+
+    if (xen_enabled()) {
+        error_setg(errp, "-mem-path not supported with Xen");
+        return NULL;
+    }
+
+    if (kvm_enabled() && !kvm_has_sync_mmu()) {
+        error_setg(errp,
+                   "host lacks kvm mmu notifiers, -mem-path unsupported");
+        return NULL;
+    }
+
+    if (phys_mem_alloc != qemu_anon_ram_alloc) {
+        /*
+         * file_ram_alloc() needs to allocate just like
+         * phys_mem_alloc, but we haven't bothered to provide
+         * a hook there.
+         */
+        error_setg(errp,
+                   "-mem-path not supported with this accelerator");
+        return NULL;
+    }
+
+    size = HOST_PAGE_ALIGN(size);
+    if (mmap_len > 0 && mmap_len != size) {
+        error_setg(errp, "backing store %s size 0x%" PRIx64
+                   " does not match page_aligned('size') option 0x" RAM_ADDR_FMT,
+                   mem_path, mmap_len, size);
+        return NULL;
+    }
+
+    new_block = g_malloc0(sizeof(*new_block));
+    new_block->mr = mr;
+    new_block->used_length = size;
+    new_block->max_length = size;
+    new_block->flags = ram_flags;
+    new_block->host = (uint8_t *)mmap_addr;
+    if (!new_block->host) {
+        return NULL;
+    }
+    new_block->page_size = 0x1000;
+    new_block->mr->align = MAX(new_block->page_size, new_block->mr->align);
+
+    ram_block_add(new_block, &local_err, ram_flags & RAM_SHARED);
+    if (local_err) {
+        g_free(new_block);
+        error_propagate(errp, local_err);
+        return NULL;
+    }
+    return new_block;
+}
+
 RAMBlock *qemu_ram_alloc_from_file(ram_addr_t size, MemoryRegion *mr,
                                    uint32_t ram_flags, const char *mem_path,
                                    Error **errp)

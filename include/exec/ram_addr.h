@@ -100,6 +100,10 @@ long qemu_maxrampagesize(void);
 RAMBlock *qemu_ram_alloc_from_file(ram_addr_t size, MemoryRegion *mr,
                                    uint32_t ram_flags, const char *mem_path,
                                    Error **errp);
+RAMBlock *qemu_ram_alloc_from_mmap_addr(ram_addr_t size, MemoryRegion *mr,
+		uint32_t ram_flags,
+		char *mmap_addr, ram_addr_t mmap_len,
+		Error **errp);
 RAMBlock *qemu_ram_alloc_from_fd(ram_addr_t size, MemoryRegion *mr,
                                  uint32_t ram_flags, int fd,
                                  Error **errp);

@@ -663,6 +663,16 @@ void memory_region_init_ram_from_file(MemoryRegion *mr,
                                       const char *path,
                                       Error **errp);
 
+void
+memory_region_init_ram_from_nablafs(MemoryRegion *mr,
+                                      struct Object *owner,
+                                      const char *name,
+                                      uint64_t size,
+                                      uint64_t align,
+                                      uint32_t ram_flags,
+                                      const char *path,
+                                      Error **errp);
+
 /**
  * memory_region_init_ram_from_fd:  Initialize RAM memory region with a
  *                                  mmap-ed backend.

@@ -312,7 +312,10 @@ configure: ;
 
 $(call set-vpath, $(SRC_PATH))
 
-LIBS+=-lz $(LIBS_TOOLS)
+LIBS+=-lz $(LIBS_TOOLS)  -luuid -lpthread -lblkid
+LIBS+=/home/kollerr/research/xfsprogs-dev/mkfs/.libs/libnablafs.a
+LIBS+=/home/kollerr/research/xfsprogs-dev/libxfs/.libs/libxfs.a
+LIBS+=/home/kollerr/research/xfsprogs-dev/libfrog/.libs/libfrog.a
 
 vhost-user-json-y =
 HELPERS-y =

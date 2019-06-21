@@ -142,6 +142,7 @@ void *qemu_ram_mmap(int fd,
     flags |= shared ? MAP_SHARED : MAP_PRIVATE;
     if (shared && is_pmem) {
         map_sync_flags = MAP_SYNC | MAP_SHARED_VALIDATE;
+        //map_sync_flags = MAP_SYNC | MAP_SHARED_VALIDATE;
     }
 
     offset = QEMU_ALIGN_UP((uintptr_t)guardptr, align) - (uintptr_t)guardptr;
