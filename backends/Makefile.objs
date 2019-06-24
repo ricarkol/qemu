@@ -5,7 +5,7 @@ common-obj-$(CONFIG_TPM) += tpm.o
 
 common-obj-y += hostmem.o hostmem-ram.o
 common-obj-$(CONFIG_POSIX) += hostmem-file.o hostmem-nablafs.o
-hostmem-nablafs.o-libs := /home/kollerr/research/xfsprogs-dev/mkfs/.libs/libnablafs.so -luuid -lpthread /home/kollerr/research/xfsprogs-dev/libxfs/.libs/libxfs.so /home/kollerr/research/xfsprogs-dev/libfrog/.libs/libfrog.so -lblkid
+hostmem-nablafs.o-libs := -lnablafs -luuid -lpthread -lxfs -lfrog -lblkid
 
 common-obj-y += cryptodev.o
 common-obj-y += cryptodev-builtin.o
